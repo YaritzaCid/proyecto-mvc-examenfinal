@@ -2,11 +2,13 @@ import { Request, Response } from "express";
 import {
   getAllAffiliates,
   getAffiliateById,
+  getAffiliateByEmail,
   createAffiliateModel,
   updateAffiliateModel,
   deleteAffiliateModel,
-  getDiscountByMembership,
+  getDiscountByMembership
 } from "../models/affiliateModel";
+import { affiliateSchema, simulateDiscountSchema } from "../schemas/affiliateSchema";
 
 export const listAffiliates = async (req: Request, res: Response) => {
   const affiliates = await getAllAffiliates();
@@ -19,16 +21,30 @@ export const listAffiliates = async (req: Request, res: Response) => {
 export const showCreateForm = (req: Request, res: Response) => {
   res.render("affiliates/create");
 };
-
+/* Create Affiliate */
 export const createAffiliate = async (req: Request, res: Response) => {
-  const { firstName, lastName, email, membershipType } = req.body;
+  const result = affiliateSchema.safeParse(req.body);
 
-  const affiliates = await getAllAffiliates();
+  if (!result.success) {
+    const errors = result.error.flatten().fieldErrors;
 
-  const existing = affiliates.find((affiliate) => affiliate.email === email);
+    return res.render("affiliates/create", {
+      errors,
+      old: req.body,
+    });
+  }
+
+  const { firstName, lastName, email, membershipType } = result.data;
+
+  const existing = await getAffiliateByEmail(email);
 
   if (existing) {
-    return res.send("Este email ya está registrado");
+    return res.render("affiliates/create", {
+      errors: {
+        email: ["Este email ya está registrado"],
+      },
+      old: req.body,
+    });
   }
 
   await createAffiliateModel({
@@ -72,7 +88,35 @@ export const showEditForm = async (req: Request, res: Response) => {
 export const updateAffiliate = async (req: Request, res: Response) => {
   const id = Number(req.params.id);
 
-  const { firstName, lastName, email, membershipType } = req.body;
+  const result = affiliateSchema.safeParse(req.body);
+
+  if (!result.success) {
+    const errors = result.error.flatten().fieldErrors;
+
+    return res.render("affiliates/edit", {
+      errors,
+      affiliate: {
+        id,
+        ...req.body,
+      },
+    });
+  }
+
+  const { firstName, lastName, email, membershipType } = result.data;
+
+  const existing = await getAffiliateByEmail(email);
+
+  if (existing && existing.id !== id) {
+    return res.render("affiliates/edit", {
+      errors: {
+        email: ["Este email ya está registrado"],
+      },
+      affiliate: {
+        id,
+        ...req.body,
+      },
+    });
+  }
 
   await updateAffiliateModel(id, {
     firstName,
@@ -94,7 +138,8 @@ export const deleteAffiliate = async (req: Request, res: Response) => {
 
 export const simulateDiscount = async (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const amount = Number(req.body.amount);
+
+  const result = simulateDiscountSchema.safeParse(req.body);
 
   const affiliate = await getAffiliateById(id);
 
@@ -102,6 +147,16 @@ export const simulateDiscount = async (req: Request, res: Response) => {
     return res.send("Afiliado no encontrado");
   }
 
+  if (!result.success) {
+    const errors = result.error.flatten().fieldErrors;
+
+    return res.render("affiliates/detail", {
+      affiliate,
+      errors,
+    });
+  }
+
+  const amount = result.data.amount;
   const discount = getDiscountByMembership(affiliate.membershipType);
   const discountPercent = discount * 100;
   const finalPrice = amount - amount * discount;

@@ -49,3 +49,10 @@ export const getDiscountByMembership = (membershipType: string) => {
 
   return 0;
 };
+
+export const getAffiliateByEmail = async (email: string) => {
+  return await prisma.affiliate.findUnique({
+    where: { email },
+  });
+};
+

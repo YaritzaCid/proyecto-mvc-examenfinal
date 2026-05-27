@@ -4,63 +4,76 @@
 
   <form method="POST" action="/affiliates/create">
 
-    <div class="mb-3">
-      <label class="form-label">Nombre</label>
+<div class="mb-3">
+  <label class="form-label">Nombre</label>
 
-      <input
-        type="text"
-        name="firstName"
-        class="form-control"
-        required
-      >
+  <input
+    type="text"
+    name="firstName"
+    class="form-control"
+    value="{{old.firstName}}"
+  >
+
+  {{#if errors.firstName}}
+    <div class="text-danger mt-1">
+      {{errors.firstName.[0]}}
     </div>
+  {{/if}}
+</div>
 
     <div class="mb-3">
       <label class="form-label">Apellido</label>
-
       <input
         type="text"
         name="lastName"
         class="form-control"
-        required
+        value="{{old.lastName}}"
       >
+
+      {{#if errors.lastName}}
+        <div class="text-danger mt-1">
+          {{errors.lastName.[0]}}
+        </div>
+      {{/if}}
     </div>
 
     <div class="mb-3">
       <label class="form-label">Correo</label>
-
       <input
-        type="email"
+        type="text"
         name="email"
         class="form-control"
-        required
+        value="{{old.email}}"
       >
+
+      {{#if errors.email}}
+        <div class="text-danger mt-1">
+          {{errors.email.[0]}}
+        </div>
+      {{/if}}
     </div>
 
     <div class="mb-4">
       <label class="form-label">Membresía</label>
-
-      <select
-        name="membershipType"
-        class="form-select"
-      >
+      <select name="membershipType" class="form-select">
+        <option value="">Seleccione membresía</option>
         <option value="silver">Silver</option>
         <option value="gold">Gold</option>
         <option value="platinium">Platinium</option>
       </select>
+
+      {{#if errors.membershipType}}
+        <div class="text-danger mt-1">
+          {{errors.membershipType.[0]}}
+        </div>
+      {{/if}}
     </div>
 
-    <button
-      type="submit"
-      class="btn btn-success"
-    >
+    <button type="submit" class="btn btn-success">
       Guardar afiliado
     </button>
 
-    <a
-      href="/affiliates"
-      class="btn btn-secondary"
-    >
+    <a href="/affiliates" class="btn btn-secondary">
       Volver
     </a>
 
