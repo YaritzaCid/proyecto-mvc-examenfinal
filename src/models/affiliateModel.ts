@@ -1,12 +1,17 @@
 import prisma from "../prisma/client";
 
-export const getAllAffiliates = async () => {
-  return await prisma.affiliate.findMany();
+export const getAllAffiliates = async (userId: number) => {
+  return await prisma.affiliate.findMany({
+    where: { userId },
+  });
 };
 
-export const getAffiliateById = async (id: number) => {
-  return await prisma.affiliate.findUnique({
-    where: { id },
+export const getAffiliateById = async (id: number, userId: number) => {
+  return await prisma.affiliate.findFirst({
+    where: {
+      id,
+      userId,
+    },
   });
 };
 
@@ -15,6 +20,7 @@ export const createAffiliateModel = async (data: {
   lastName: string;
   email: string;
   membershipType: string;
+  userId: number;
 }) => {
   return await prisma.affiliate.create({
     data,
@@ -23,6 +29,7 @@ export const createAffiliateModel = async (data: {
 
 export const updateAffiliateModel = async (
   id: number,
+  userId: number,
   data: {
     firstName: string;
     lastName: string;
@@ -30,29 +37,38 @@ export const updateAffiliateModel = async (
     membershipType: string;
   }
 ) => {
-  return await prisma.affiliate.update({
-    where: { id },
+  return await prisma.affiliate.updateMany({
+    where: {
+      id,
+      userId,
+    },
     data,
   });
 };
 
-export const deleteAffiliateModel = async (id: number) => {
-  return await prisma.affiliate.delete({
-    where: { id },
+export const deleteAffiliateModel = async (id: number, userId: number) => {
+  return await prisma.affiliate.deleteMany({
+    where: {
+      id,
+      userId,
+    },
+  });
+};
+
+export const getAffiliateByEmail = async (email: string, userId: number) => {
+  return await prisma.affiliate.findFirst({
+    where: {
+      email,
+      userId,
+    },
   });
 };
 
 export const getDiscountByMembership = (membershipType: string) => {
   if (membershipType === "silver") return 0.05;
-  if (membershipType === "gold") return 0.10;
-  if (membershipType === "platinium") return 0.20;
+  if (membershipType === "gold") return 0.1;
+  if (membershipType === "platinium") return 0.2;
 
   return 0;
-};
-
-export const getAffiliateByEmail = async (email: string) => {
-  return await prisma.affiliate.findUnique({
-    where: { email },
-  });
 };
 
