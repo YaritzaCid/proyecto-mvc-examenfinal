@@ -12,5 +12,17 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  app:
+    build: .
+    container_name: dentplus_app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/dentplus_u3?schema=public
+      SESSION_SECRET: dentplus-secret
+    depends_on:
+      - postgres
+
 volumes:
   postgres_data:
