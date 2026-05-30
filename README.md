@@ -1,18 +1,23 @@
-# DentPlus MVC
+# DentPlus Evolucionado - Unidad 3
 
-Sistema web desarrollado para la gestión de afiliados de una clínica dental utilizando arquitectura MVC.
+Sistema web desarrollado para la gestión de afiliados de una clínica dental utilizando arquitectura MVC, autenticación de usuarios, validaciones con Zod, PostgreSQL y Docker.
 
 ---
 
 # Tecnologías utilizadas
 
-- Node.js
-- TypeScript
-- Express
-- Handlebars
-- Prisma ORM
-- SQLite
-- Bootstrap 5
+* Node.js
+* TypeScript
+* Express
+* Handlebars
+* Prisma ORM
+* PostgreSQL
+* Docker
+* Docker Compose
+* Bootstrap 5
+* Zod
+* bcryptjs
+* express-session
 
 ---
 
@@ -20,23 +25,53 @@ Sistema web desarrollado para la gestión de afiliados de una clínica dental ut
 
 El proyecto se encuentra organizado utilizando el patrón MVC:
 
-- Models → acceso y lógica de datos
-- Views → interfaces desarrolladas con Handlebars
-- Controllers → coordinación entre vistas y modelos
-- Routes → definición de endpoints
-- Prisma → conexión con la base de datos SQLite
+* Models → acceso y lógica de datos
+* Views → interfaces desarrolladas con Handlebars
+* Controllers → coordinación entre vistas y modelos
+* Routes → definición de endpoints
+* Prisma → conexión con la base de datos PostgreSQL
 
 ---
 
 # Funcionalidades
 
-## CRUD completo de afiliados
+## Gestión de usuarios
 
-- Crear afiliados
-- Listar afiliados
-- Ver detalle de afiliados
-- Editar afiliados
-- Eliminar afiliados
+* Registro de usuarios
+* Inicio de sesión
+* Cierre de sesión
+* Contraseñas protegidas mediante bcryptjs
+
+---
+
+## Gestión de afiliados
+
+* Crear afiliados
+* Listar afiliados
+* Ver detalle de afiliados
+* Editar afiliados
+* Eliminar afiliados
+
+---
+
+## Aislamiento de datos
+
+Cada usuario puede visualizar y administrar únicamente sus propios afiliados.
+
+El identificador del usuario autenticado se obtiene desde la sesión y nunca desde formularios enviados por el cliente.
+
+---
+
+## Validaciones con Zod
+
+Se validan los formularios de:
+
+* Registro de usuarios
+* Creación de afiliados
+* Edición de afiliados
+* Simulación de descuentos
+
+Las validaciones muestran errores inline y mantienen los datos ingresados por el usuario.
 
 ---
 
@@ -44,81 +79,106 @@ El proyecto se encuentra organizado utilizando el patrón MVC:
 
 Cada afiliado posee un tipo de membresía:
 
-- Silver → 5%
-- Gold → 10%
-- Platinium → 20%
+* Silver → 5%
+* Gold → 10%
+* Platinium → 20%
 
 El sistema permite ingresar un monto de tratamiento y calcular automáticamente el precio final según el descuento correspondiente.
 
 ---
 
-# Instalación y ejecución del proyecto
+# Instalación y ejecución SIN Docker
 
 ## Requisitos previos
 
-Antes de ejecutar el proyecto es necesario tener instalado:
-
-- Node.js
-- npm
-- Git
+* Node.js
+* npm
+* PostgreSQL
+* Git
 
 ---
 
-## 1. Clonar repositorio
+## Clonar repositorio
 
 ```bash
 git clone URL_DEL_REPOSITORIO
 ```
 
----
-
-## 2. Ingresar a la carpeta del proyecto
+## Ingresar al proyecto
 
 ```bash
-cd proyecto-mvc
+cd proyecto-mvc-u3
 ```
 
----
-
-## 3. Instalar dependencias
+## Instalar dependencias
 
 ```bash
 npm install
 ```
 
-Esto instalará todas las dependencias necesarias definidas en el archivo `package.json`.
+## Crear archivo .env
 
----
+Tomar como referencia el archivo:
 
-## 4. Configurar base de datos Prisma
+```txt
+.env.example
+```
 
-Ejecutar migraciones:
+## Ejecutar migraciones
 
 ```bash
 npx prisma migrate dev
 ```
 
-Este comando:
-- crea la base de datos SQLite
-- genera las tablas
-- aplica las migraciones necesarias
+## Generar cliente Prisma
 
----
+```bash
+npx prisma generate
+```
 
-## 5. Ejecutar el proyecto
+## Ejecutar aplicación
 
 ```bash
 npm run dev
 ```
 
----
-
-## 6. Abrir aplicación
-
-Abrir en navegador:
+## Abrir navegador
 
 ```txt
 http://localhost:3000
+```
+
+---
+
+# Instalación y ejecución CON Docker
+
+## Levantar contenedores
+
+```bash
+docker compose up --build
+```
+
+## Abrir navegador
+
+```txt
+http://localhost:3000
+```
+
+---
+
+# Variables de entorno
+
+Archivo:
+
+```txt
+.env
+```
+
+Variables requeridas:
+
+```env
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/dentplus_u3?schema=public"
+SESSION_SECRET="dentplus-secret"
 ```
 
 ---
@@ -128,30 +188,37 @@ http://localhost:3000
 ```txt
 src/
  ├── controllers
+ ├── middlewares
  ├── models
  ├── routes
- ├── prisma
+ ├── schemas
+ ├── types
  └── app.ts
 
 views/
  ├── affiliates
+ ├── auth
  └── layouts
 
 prisma/
- └── schema.prisma
-```
-
-# Base de datos
-
-El proyecto utiliza SQLite mediante Prisma ORM.
-
-Archivo principal:
-
-```txt
-dev.db
+ ├── schema.prisma
+ └── migrations
 ```
 
 ---
+
+# Uso de Inteligencia Artificial
+
+Durante el desarrollo se utilizó ChatGPT como herramienta de apoyo para:
+
+* Comprender conceptos de autenticación y sesiones
+* Implementar validaciones utilizando Zod
+* Configurar Prisma ORM
+* Migrar desde SQLite a PostgreSQL
+* Implementar Docker y Docker Compose
+* Resolver errores de TypeScript y Prisma
+
+La herramienta fue utilizada como apoyo educativo.
 
 ---
 
@@ -159,10 +226,4 @@ dev.db
 
 El funcionamiento del sistema y explicación del proyecto se encuentra disponible en el siguiente enlace:
 
-[Ver video en YouTube](https://youtu.be/eF6qDWzsh0s)
 
----
-
-# Autor
-
-Proyecto desarrollado por Yaritza Cid.
