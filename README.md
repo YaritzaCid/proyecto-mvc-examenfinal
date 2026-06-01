@@ -226,4 +226,4 @@ La herramienta fue utilizada como apoyo educativo.
 
 El funcionamiento del sistema y explicación del proyecto se encuentra disponible en el siguiente enlace:
 
-video: 
+video: https://youtu.be/F7VTnZsiJyg
