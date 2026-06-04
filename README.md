@@ -281,8 +281,4 @@ El funcionamiento del sistema y explicación del proyecto se encuentra disponibl
 
 Video:
 
----
 
-# Autor
-
-**Yaritza Cid**
