@@ -1,4 +1,4 @@
-# DentPlus Evolucionado - Unidad 3
+# DentPlus Evolucionado - Examen Final
 
 Sistema web desarrollado para la gestión de afiliados de una clínica dental utilizando arquitectura MVC, autenticación de usuarios, validaciones con Zod, PostgreSQL y Docker.
 
@@ -25,11 +25,11 @@ Sistema web desarrollado para la gestión de afiliados de una clínica dental ut
 
 El proyecto se encuentra organizado utilizando el patrón MVC:
 
-* Models → acceso y lógica de datos
-* Views → interfaces desarrolladas con Handlebars
-* Controllers → coordinación entre vistas y modelos
-* Routes → definición de endpoints
-* Prisma → conexión con la base de datos PostgreSQL
+* Models → acceso y lógica de datos mediante Prisma ORM.
+* Views → interfaces desarrolladas con Handlebars.
+* Controllers → lógica de negocio y coordinación entre vistas y modelos.
+* Routes → definición de endpoints y navegación.
+* Prisma → conexión y persistencia de datos en PostgreSQL.
 
 ---
 
@@ -37,20 +37,21 @@ El proyecto se encuentra organizado utilizando el patrón MVC:
 
 ## Gestión de usuarios
 
-* Registro de usuarios
-* Inicio de sesión
-* Cierre de sesión
-* Contraseñas protegidas mediante bcryptjs
+* Registro de usuarios.
+* Inicio de sesión.
+* Cierre de sesión.
+* Contraseñas protegidas mediante bcryptjs.
+* Gestión de sesiones mediante express-session.
 
 ---
 
 ## Gestión de afiliados
 
-* Crear afiliados
-* Listar afiliados
-* Ver detalle de afiliados
-* Editar afiliados
-* Eliminar afiliados
+* Crear afiliados.
+* Listar afiliados.
+* Ver detalle de afiliados.
+* Editar afiliados.
+* Eliminar afiliados.
 
 ---
 
@@ -66,10 +67,11 @@ El identificador del usuario autenticado se obtiene desde la sesión y nunca des
 
 Se validan los formularios de:
 
-* Registro de usuarios
-* Creación de afiliados
-* Edición de afiliados
-* Simulación de descuentos
+* Registro de usuarios.
+* Inicio de sesión.
+* Creación de afiliados.
+* Edición de afiliados.
+* Simulación de descuentos.
 
 Las validaciones muestran errores inline y mantienen los datos ingresados por el usuario.
 
@@ -87,6 +89,27 @@ El sistema permite ingresar un monto de tratamiento y calcular automáticamente 
 
 ---
 
+# Dockerización
+
+La aplicación fue dockerizada utilizando Docker y Docker Compose.
+
+Se implementó un Dockerfile con estrategia Multi-Stage Build dividido en tres etapas:
+
+* deps → instalación de dependencias.
+* build → generación de Prisma Client y compilación TypeScript.
+* runner → ejecución optimizada de la aplicación.
+
+Esto permite generar imágenes más pequeñas, seguras y eficientes para despliegue.
+
+Además, Docker Compose levanta automáticamente:
+
+* PostgreSQL
+* Aplicación Node.js
+
+Las migraciones de Prisma se ejecutan automáticamente al iniciar el contenedor, por lo que no se requieren pasos manuales adicionales.
+
+---
+
 # Instalación y ejecución SIN Docker
 
 ## Requisitos previos
@@ -96,18 +119,16 @@ El sistema permite ingresar un monto de tratamiento y calcular automáticamente 
 * PostgreSQL
 * Git
 
----
-
 ## Clonar repositorio
 
 ```bash
-git clone URL_DEL_REPOSITORIO
+git clone https://github.com/YaritzaCid/proyecto-mvc-examenfinal.git
 ```
 
 ## Ingresar al proyecto
 
 ```bash
-cd proyecto-mvc-u3
+cd proyecto-mvc-examenfinal
 ```
 
 ## Instalar dependencias
@@ -130,7 +151,7 @@ Tomar como referencia el archivo:
 npx prisma migrate dev
 ```
 
-## Generar cliente Prisma
+## Generar Prisma Client
 
 ```bash
 npx prisma generate
@@ -152,10 +173,34 @@ http://localhost:3000
 
 # Instalación y ejecución CON Docker
 
-## Levantar contenedores
+## Requisitos
+
+* Docker Desktop instalado y en ejecución.
+
+## Levantar proyecto
 
 ```bash
 docker compose up --build
+```
+
+Este comando:
+
+* Levanta PostgreSQL.
+* Levanta la aplicación Node.js.
+* Ejecuta automáticamente las migraciones de Prisma.
+* Deja la aplicación lista para utilizar.
+
+## Verificar contenedores
+
+```bash
+docker ps
+```
+
+Deben aparecer:
+
+```txt
+dentplus_app
+dentplus_postgres
 ```
 
 ## Abrir navegador
@@ -179,6 +224,12 @@ Variables requeridas:
 ```env
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/dentplus_u3?schema=public"
 SESSION_SECRET="dentplus-secret"
+```
+
+Como referencia para nuevos desarrolladores se incluye el archivo:
+
+```txt
+.env.example
 ```
 
 ---
@@ -209,16 +260,18 @@ prisma/
 
 # Uso de Inteligencia Artificial
 
-Durante el desarrollo se utilizó ChatGPT como herramienta de apoyo para:
+Durante el desarrollo se utilizó ChatGPT como herramienta de apoyo durante la realización de las 3 evaluaciones + examen final para:
 
-* Comprender conceptos de autenticación y sesiones
-* Implementar validaciones utilizando Zod
-* Configurar Prisma ORM
-* Migrar desde SQLite a PostgreSQL
-* Implementar Docker y Docker Compose
-* Resolver errores de TypeScript y Prisma
+* Comprender conceptos de autenticación y sesiones.
+* Implementar validaciones utilizando Zod.
+* Configurar Prisma ORM.
+* Migrar desde SQLite a PostgreSQL.
+* Implementar Docker y Docker Compose.
+* Implementar Docker Multi-Stage Build.
+* Resolver errores de TypeScript, Prisma y Docker.
+* Mejorar la documentación del proyecto.
 
-La herramienta fue utilizada como apoyo educativo.
+La herramienta fue utilizada como apoyo educativo y de aprendizaje, comprendiendo y validando cada una de las soluciones implementadas.
 
 ---
 
@@ -226,4 +279,10 @@ La herramienta fue utilizada como apoyo educativo.
 
 El funcionamiento del sistema y explicación del proyecto se encuentra disponible en el siguiente enlace:
 
-video: https://youtu.be/F7VTnZsiJyg
+Video:
+
+---
+
+# Autor
+
+**Yaritza Cid**
