@@ -279,6 +279,6 @@ La herramienta fue utilizada como apoyo educativo y de aprendizaje, comprendiend
 
 El funcionamiento del sistema y explicación del proyecto se encuentra disponible en el siguiente enlace:
 
-Video:
+Video: https://youtu.be/P97IOFj-GV8
 
 
